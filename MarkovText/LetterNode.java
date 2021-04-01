@@ -46,7 +46,7 @@ class LetterNode implements Comparable {
 
 			if (this.containsLetterNode(nextChar)) {
 
-				
+
 
 			} else {
 
@@ -57,6 +57,18 @@ class LetterNode implements Comparable {
 
 
 		}
+
+	}
+
+	boolean getNodeLetter() {
+
+		return letter;
+
+	}
+
+	int compareTo(LetterNode otherNode) {
+
+		return Character.compare(this.getNodeLetter(), otherNode.getNodeLetter());
 
 	}
 
