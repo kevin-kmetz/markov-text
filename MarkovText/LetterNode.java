@@ -2,26 +2,27 @@ package MarkovText;
 
 import java.util.TreeSet;
 
-class LetterNode implements Comparable {
+public class LetterNode implements Comparable<LetterNode> {
 
 	private final char letter;
 	private boolean isTerminal;
 
-	TreeSet<LetterNode> subNodes = new TreeSet<LetterNode>();
+	private TreeSet<LetterNode> subNodes = new TreeSet<LetterNode>();
 
-	LetterNode(String wordSegment) {
+	public LetterNode(String wordSegment) {
+
+		letter = wordSegment.charAt(0);
 
 		if (wordSegment.length() == 1) {
 
-			letter = wordSegment.charAt(0);
 			isTerminal = true;
 
 		} else if (wordSegment.length() > 1) {
 
-			letter = wordSegment.charAt(0);
 			isTerminal = false;
 
-			LetterNode lowerNode = new LetterNode(wordSegment.subString(1, wordSegment.length()-1));
+			// Note that substring's arguments are inclusive and exclusive, respectively.
+			LetterNode lowerNode = new LetterNode(wordSegment.substring(1, wordSegment.length()));
 			subNodes.add(lowerNode);
 
 		} else {
@@ -32,7 +33,7 @@ class LetterNode implements Comparable {
 
 	}
 
-	void add(String wordSegment) {
+	public void add(String wordSegment) {
 
 		// This method assumes that the parent WordTrie has already checked for the existence
 		// of this word and that it has also formatted it so that it is completely lowercase.
@@ -43,17 +44,15 @@ class LetterNode implements Comparable {
 
 		} else if (wordSegment.length() > 1) {
 
-			isTerminal = false;
-
 			char nextChar = wordSegment.charAt(1);
 
 			if (this.containsLetterNode(nextChar)) {
 
-				subNotes.floor(new LetterNode(String.valueOf(nextChar))).add(wordSegment.subString(1, wordSegment.length()-1));
+				subNodes.floor(new LetterNode(String.valueOf(nextChar))).add(wordSegment.substring(1, wordSegment.length()));
 
 			} else {
 
-				LetterNode lowerNode = new LetterNode(wordSegment.subString(1, wordSegment.length()-1));
+				LetterNode lowerNode = new LetterNode(wordSegment.substring(1, wordSegment.length()));
 				subNodes.add(lowerNode);
 
 			}
@@ -63,23 +62,61 @@ class LetterNode implements Comparable {
 
 	}
 
-	boolean getNodeLetter() {
+	private char getNodeLetter() {
 
 		return letter;
 
 	}
 
 	@Override
-	int compareTo(LetterNode otherNode) {
+	public int compareTo(LetterNode otherNode) {
 
 		return Character.compare(this.getNodeLetter(), otherNode.getNodeLetter());
 
 	}
 
 	@Override
-	boolean equals(LetterNode otherNode) {
+	public boolean equals(Object obj) {
 
-		return this.getNodeLetter() == otherNode.getNodeLetter();
+		if (obj == null) return false;
+		if (obj == this) return true;
+
+		if (obj instanceof LetterNode == false) {
+
+			return false;
+
+		} else {
+
+			LetterNode otherNode = (LetterNode) obj;
+
+			return this.getNodeLetter() == otherNode.getNodeLetter();
+
+		}
+
+	}
+
+	private boolean containsLetterNode(char c) {
+
+		return subNodes.contains(new LetterNode(String.valueOf(c)));
+
+	}
+
+	public void listWords(String wordSegment) {
+
+		String currentSegment = wordSegment + this.getNodeLetter();
+
+		if (this.isTerminal) {
+
+			System.out.println(currentSegment);
+
+		}
+
+
+		for (LetterNode n : subNodes) {
+
+			n.listWords(currentSegment);
+
+		}
 
 	}
 
