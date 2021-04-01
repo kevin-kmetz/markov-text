@@ -1,0 +1,5 @@
+package MarkovText;
+
+class LetterNode {
+	
+}
