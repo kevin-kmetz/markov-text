@@ -21,7 +21,7 @@ class LetterNode implements Comparable {
 			letter = wordSegment.charAt(0);
 			isTerminal = false;
 
-			LetterNode lowerNode = new LetterNode(wordSegment.subString(1, wordsegment.length()-1));
+			LetterNode lowerNode = new LetterNode(wordSegment.subString(1, wordSegment.length()-1));
 			subNodes.add(lowerNode);
 
 		} else {
@@ -32,7 +32,10 @@ class LetterNode implements Comparable {
 
 	}
 
-	boolean add(String wordSegment) {
+	void add(String wordSegment) {
+
+		// This method assumes that the parent WordTrie has already checked for the existence
+		// of this word and that it has also formatted it so that it is completely lowercase.
 
 		if (wordSegment.length() == 1) {
 
@@ -46,7 +49,7 @@ class LetterNode implements Comparable {
 
 			if (this.containsLetterNode(nextChar)) {
 
-
+				subNotes.floor(new LetterNode(String.valueOf(nextChar))).add(wordSegment.subString(1, wordSegment.length()-1));
 
 			} else {
 
@@ -66,9 +69,17 @@ class LetterNode implements Comparable {
 
 	}
 
+	@Override
 	int compareTo(LetterNode otherNode) {
 
 		return Character.compare(this.getNodeLetter(), otherNode.getNodeLetter());
+
+	}
+
+	@Override
+	boolean equals(LetterNode otherNode) {
+
+		return this.getNodeLetter() == otherNode.getNodeLetter();
 
 	}
 
