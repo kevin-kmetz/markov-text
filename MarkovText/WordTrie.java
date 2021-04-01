@@ -1,5 +1,5 @@
 package MarkovText;
 
 class WordTrie {
-	
+
 }
